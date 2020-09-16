@@ -18,11 +18,11 @@ dependencies:
   - pytorch::pytorch >=1.0.1
   - cudatoolkit
   - cudnn
-  - pytorch::cuda100
+  - pytorch::cuda101
   - matplotlib
-  - git # to download COCO dataset
-  - curl # to download COCO dataset
-  - unzip # to download COCO dataset
+  # - git # to download COCO dataset
+  # - curl # to download COCO dataset
+  # - unzip # to download COCO dataset
   - conda-forge::bash # to download COCO dataset
   - pip:
     - opencv-python 

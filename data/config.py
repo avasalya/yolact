@@ -44,15 +44,15 @@ COCO_CLASSES = ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
                 'scissors', 'teddy bear', 'hair drier', 'toothbrush')
 
 COCO_LABEL_MAP = { 1:  1,  2:  2,  3:  3,  4:  4,  5:  5,  6:  6,  7:  7,  8:  8,
-                   9:  9, 10: 10, 11: 11, 13: 12, 14: 13, 15: 14, 16: 15, 17: 16,
-                  18: 17, 19: 18, 20: 19, 21: 20, 22: 21, 23: 22, 24: 23, 25: 24,
-                  27: 25, 28: 26, 31: 27, 32: 28, 33: 29, 34: 30, 35: 31, 36: 32,
-                  37: 33, 38: 34, 39: 35, 40: 36, 41: 37, 42: 38, 43: 39, 44: 40,
-                  46: 41, 47: 42, 48: 43, 49: 44, 50: 45, 51: 46, 52: 47, 53: 48,
-                  54: 49, 55: 50, 56: 51, 57: 52, 58: 53, 59: 54, 60: 55, 61: 56,
-                  62: 57, 63: 58, 64: 59, 65: 60, 67: 61, 70: 62, 72: 63, 73: 64,
-                  74: 65, 75: 66, 76: 67, 77: 68, 78: 69, 79: 70, 80: 71, 81: 72,
-                  82: 73, 84: 74, 85: 75, 86: 76, 87: 77, 88: 78, 89: 79, 90: 80}
+                9:  9, 10: 10, 11: 11, 13: 12, 14: 13, 15: 14, 16: 15, 17: 16,
+                18: 17, 19: 18, 20: 19, 21: 20, 22: 21, 23: 22, 24: 23, 25: 24,
+                27: 25, 28: 26, 31: 27, 32: 28, 33: 29, 34: 30, 35: 31, 36: 32,
+                37: 33, 38: 34, 39: 35, 40: 36, 41: 37, 42: 38, 43: 39, 44: 40,
+                46: 41, 47: 42, 48: 43, 49: 44, 50: 45, 51: 46, 52: 47, 53: 48,
+                54: 49, 55: 50, 56: 51, 57: 52, 58: 53, 59: 54, 60: 55, 61: 56,
+                62: 57, 63: 58, 64: 59, 65: 60, 67: 61, 70: 62, 72: 63, 73: 64,
+                74: 65, 75: 66, 76: 67, 77: 68, 78: 69, 79: 70, 80: 71, 81: 72,
+                82: 73, 84: 74, 85: 75, 86: 76, 87: 77, 88: 78, 89: 79, 90: 80}
 
 
 
@@ -78,7 +78,7 @@ class Config(object):
         """
 
         ret = Config(vars(self))
-        
+
         for key, val in new_config_dict.items():
             ret.__setattr__(key, val)
 
@@ -94,7 +94,7 @@ class Config(object):
 
         for key, val in new_config_dict.items():
             self.__setattr__(key, val)
-    
+
     def print(self):
         for k, v in vars(self).items():
             print(k, ' = ', v)
@@ -128,9 +128,22 @@ dataset_base = Config({
     'label_map': None
 })
 
+onigiriLabelme_dataset = dataset_base.copy({
+    'name': 'onigiri200Coco',
+
+    'train_images': './data/coco/',
+    'train_info': './data/coco/annotations.json',
+
+    'valid_images': '/data/coco/',
+    'valid_info': './data/coco/annotations.json',
+
+    # 'label_map': COCO_LABEL_MAP
+    'class_names': ('onigiri')
+})
+
 coco2014_dataset = dataset_base.copy({
     'name': 'COCO 2014',
-    
+
     'train_info': './data/coco/annotations/instances_train2014.json',
     'valid_info': './data/coco/annotations/instances_val2014.json',
 
@@ -139,7 +152,7 @@ coco2014_dataset = dataset_base.copy({
 
 coco2017_dataset = dataset_base.copy({
     'name': 'COCO 2017',
-    
+
     'train_info': './data/coco/annotations/instances_train2017.json',
     'valid_info': './data/coco/annotations/instances_val2017.json',
 
@@ -156,16 +169,16 @@ coco2017_testdev_dataset = dataset_base.copy({
 })
 
 PASCAL_CLASSES = ("aeroplane", "bicycle", "bird", "boat", "bottle",
-                  "bus", "car", "cat", "chair", "cow", "diningtable",
-                  "dog", "horse", "motorbike", "person", "pottedplant",
-                  "sheep", "sofa", "train", "tvmonitor")
+                "bus", "car", "cat", "chair", "cow", "diningtable",
+                "dog", "horse", "motorbike", "person", "pottedplant",
+                "sheep", "sofa", "train", "tvmonitor")
 
 pascal_sbd_dataset = dataset_base.copy({
     'name': 'Pascal SBD 2012',
 
     'train_images': './data/sbd/img',
     'valid_images': './data/sbd/img',
-    
+
     'train_info': './data/sbd/pascal_sbd_train.json',
     'valid_info': './data/sbd/pascal_sbd_val.json',
 
@@ -520,7 +533,7 @@ coco_base_config = Config({
     'use_focal_loss': False,
     'focal_loss_alpha': 0.25,
     'focal_loss_gamma': 2,
-    
+
     # The initial bias toward forground objects, as specified in the focal loss paper
     'focal_loss_init_pi': 0.01,
 
@@ -582,7 +595,7 @@ coco_base_config = Config({
 
     # Input image size.
     'max_size': 300,
-    
+
     # Whether or not to do post processing on the cpu at test time
     'force_cpu_nms': True,
 
@@ -612,7 +625,7 @@ coco_base_config = Config({
 
     # Whether or not to use the predicted coordinate scheme from Yolo v2
     'use_yolo_regressors': False,
-    
+
     # For training, bboxes are considered "positive" if their anchors have a 0.5 IoU overlap
     # or greater with a ground truth box. If this is true, instead of using the anchor boxes
     # for this IoU computation, the matching function will use the predicted bbox coordinates.
@@ -634,7 +647,7 @@ coco_base_config = Config({
     # Do not crop out the mask with bbox but slide a convnet on the image-size mask,
     # then use global pooling to get the final mask score
     'use_maskiou': False,
-    
+
     # Archecture for the mask iou network. A (num_classes-1, 1, {}) layer is appended to the end.
     'maskiou_net': [],
 
@@ -657,16 +670,16 @@ yolact_base_config = coco_base_config.copy({
     'name': 'yolact_base',
 
     # Dataset stuff
-    'dataset': coco2017_dataset,
-    'num_classes': len(coco2017_dataset.class_names) + 1,
+    'dataset': onigiriLabelme_dataset,
+    'num_classes': len(onigiriLabelme_dataset.class_names) + 1,
 
     # Image Size
     'max_size': 550,
-    
+
     # Training params
     'lr_steps': (280000, 600000, 700000, 750000),
     'max_iter': 800000,
-    
+
     # Backbone Settings
     'backbone': resnet101_backbone.copy({
         'selected_layers': list(range(1, 4)),
@@ -727,7 +740,7 @@ yolact_darknet53_config = yolact_base_config.copy({
 
     'backbone': darknet53_backbone.copy({
         'selected_layers': list(range(2, 5)),
-        
+
         'pred_scales': yolact_base_config.backbone.pred_scales,
         'pred_aspect_ratios': yolact_base_config.backbone.pred_aspect_ratios,
         'use_pixel_scales': True,
@@ -741,7 +754,7 @@ yolact_resnet50_config = yolact_base_config.copy({
 
     'backbone': resnet50_backbone.copy({
         'selected_layers': list(range(1, 4)),
-        
+
         'pred_scales': yolact_base_config.backbone.pred_scales,
         'pred_aspect_ratios': yolact_base_config.backbone.pred_aspect_ratios,
         'use_pixel_scales': True,
@@ -753,14 +766,14 @@ yolact_resnet50_config = yolact_base_config.copy({
 
 yolact_resnet50_pascal_config = yolact_resnet50_config.copy({
     'name': None, # Will default to yolact_resnet50_pascal
-    
+
     # Dataset stuff
     'dataset': pascal_sbd_dataset,
     'num_classes': len(pascal_sbd_dataset.class_names) + 1,
 
     'max_iter': 120000,
     'lr_steps': (60000, 100000),
-    
+
     'backbone': yolact_resnet50_config.backbone.copy({
         'pred_scales': [[32], [64], [128], [256], [512]],
         'use_square_anchors': False,
@@ -774,7 +787,7 @@ yolact_plus_base_config = yolact_base_config.copy({
 
     'backbone': resnet101_dcn_inter3_backbone.copy({
         'selected_layers': list(range(1, 4)),
-        
+
         'pred_aspect_ratios': [ [[1, 1/2, 2]] ]*5,
         'pred_scales': [[i * 2 ** (j / 3.0) for j in range(3)] for i in [24, 48, 96, 192, 384]],
         'use_pixel_scales': True,
@@ -796,7 +809,7 @@ yolact_plus_resnet50_config = yolact_plus_base_config.copy({
 
     'backbone': resnet50_dcnv2_backbone.copy({
         'selected_layers': list(range(1, 4)),
-        
+
         'pred_aspect_ratios': [ [[1, 1/2, 2]] ]*5,
         'pred_scales': [[i * 2 ** (j / 3.0) for j in range(3)] for i in [24, 48, 96, 192, 384]],
         'use_pixel_scales': True,
@@ -823,4 +836,4 @@ def set_cfg(config_name:str):
 def set_dataset(dataset_name:str):
     """ Sets the dataset of the current config. """
     cfg.dataset = eval(dataset_name)
-    
+
