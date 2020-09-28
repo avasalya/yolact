@@ -1,3 +1,7 @@
+""" to evaluate on images """
+
+# python eval.py --trained_model=weights/yolact_base_31999_800000.pth --score_threshold=0.15 --top_k=15 --images=data/coco/JPEGImages:results
+
 from data import COCODetection, get_label_map, MEANS, COLORS
 from yolact import Yolact
 from utils.augmentations import BaseTransform, FastBaseTransform, Resize

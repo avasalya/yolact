@@ -134,7 +134,7 @@ onigiriLabelme_dataset = dataset_base.copy({
     'train_images': './data/coco/',
     'train_info': './data/coco/annotations.json',
 
-    'valid_images': '/data/coco/',
+    'valid_images': './data/coco/',
     'valid_info': './data/coco/annotations.json',
 
     # 'label_map': COCO_LABEL_MAP
