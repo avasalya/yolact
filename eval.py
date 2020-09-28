@@ -1,6 +1,13 @@
-""" to evaluate on images """
-
+""" test on batch of images """
 # python eval.py --trained_model=weights/yolact_base_31999_800000.pth --score_threshold=0.15 --top_k=15 --images=data/coco/JPEGImages:results
+
+""" check webcam device id """
+# ls -ltrh /dev/video*
+
+""" use live webcam """
+# python eval.py --trained_model=weights/yolact_base_31999_800000.pth --score_threshold=0.15 --top_k=15 --video_multiframe=4 --video=3
+
+
 
 from data import COCODetection, get_label_map, MEANS, COLORS
 from yolact import Yolact
@@ -32,6 +39,9 @@ from PIL import Image
 
 import matplotlib.pyplot as plt
 import cv2
+
+import pyrealsense2 as rs
+
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -291,7 +301,6 @@ def prep_coco_cats():
         coco_cats[transformed_cat_id] = coco_cat_id
         coco_cats_inv[coco_cat_id] = transformed_cat_id
 
-
 def get_coco_cat(transformed_cat_id):
     """ transformed_cat_id is [0,80) as indices in cfg.dataset.class_names """
     return coco_cats[transformed_cat_id]
@@ -519,7 +528,6 @@ class APDataObject:
     Stores all the information necessary to calculate the AP for one IoU and one class.
     Note: I type annotated this because why not.
     """
-
     def __init__(self):
         self.data_points = []
         self.num_gt_positives = 0
@@ -584,6 +592,7 @@ class APDataObject:
         # avg([precision(x) for x in 0:0.01:1])
         return sum(y_range) / len(y_range)
 
+
 def badhash(x):
     """
     Just a quick and dirty hash function for doing a deterministic shuffle based on image_id.
@@ -636,6 +645,7 @@ class CustomDataParallel(torch.nn.DataParallel):
     def gather(self, outputs, output_device):
         # Note that I don't actually want to convert everything to the output_device
         return sum(outputs, [])
+
 
 def evalvideo(net:Yolact, path:str, out_path:str=None):
     # If the path is a digit, parse it as a webcam index
@@ -1006,7 +1016,6 @@ def evaluate(net:Yolact, dataset, train_mode=False):
     except KeyboardInterrupt:
         print('Stopping...')
 
-
 def calc_map(ap_data):
     print('Calculating mAP...')
     aps = [{'box': [], 'mask': []} for _ in iou_thresholds]
@@ -1052,6 +1061,31 @@ def print_maps(all_maps):
 
 if __name__ == '__main__':
     parse_args()
+
+#     """ realsense """
+#     config = rs.config()
+#     config.enable_stream(rs.stream.color, 640 , 480 , rs.format.bgr8, 30)
+#     config.enable_stream(rs.stream.depth, 640 , 480 , rs.format.z16, 30)
+
+#     # Start streaming
+#     pipeline = rs.pipeline()
+#     profile = pipeline.start(config)
+
+# try:
+#     while True:
+#         frames = pipeline.wait_for_frames()
+#         color_frame = frames.get_color_frame()
+#         depth_frame = rs.align(rs.stream.color).process(frames).get_depth_frame()
+
+#         """ color image """
+#         rgb = np.asanyarray(color_frame.get_data())
+#         rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
+
+#         """ Depth image """
+#         depth = np.asanyarray(depth_frame.get_data())
+# finally:
+#     pipeline.stop()
+
 
     if args.config is not None:
         set_cfg(args.config)
