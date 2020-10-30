@@ -144,7 +144,7 @@ class Resize(object):
 
     def __call__(self, image, masks, boxes, labels=None):
         img_h, img_w, _ = image.shape
-        
+
         if self.preserve_aspect_ratio:
             width, height = Resize.calc_size_preserve_ar(img_w, img_h, self.max_size)
         else:
@@ -156,7 +156,7 @@ class Resize(object):
             # Act like each object is a color channel
             masks = masks.transpose((1, 2, 0))
             masks = cv2.resize(masks, (width, height))
-            
+
             # OpenCV resizes a (w,h,1) array to (s,s), so fix that
             if len(masks.shape) == 2:
                 masks = np.expand_dims(masks, 0)
@@ -538,7 +538,7 @@ class PrepareMasks(object):
     def __call__(self, image, masks, boxes, labels=None):
         if not self.use_gt_bboxes:
             return image, masks, boxes, labels
-        
+
         height, width, _ = image.shape
 
         new_masks = np.zeros((masks.shape[0], self.mask_size ** 2))
@@ -556,7 +556,7 @@ class PrepareMasks(object):
             scaled_mask = cv2.resize(cropped_mask, (self.mask_size, self.mask_size))
 
             new_masks[i, :] = scaled_mask.reshape(1, -1)
-        
+
         # Binarize
         new_masks[new_masks >  0.5] = 1
         new_masks[new_masks <= 0.5] = 0
@@ -630,7 +630,7 @@ class FastBaseTransform(torch.nn.Module):
     def forward(self, img):
         self.mean = self.mean.to(img.device)
         self.std  = self.std.to(img.device)
-        
+
         # img assumed to be a pytorch BGR image with channel order [n, h, w, c]
         if cfg.preserve_aspect_ratio:
             _, h, w, _ = img.size()
@@ -639,6 +639,7 @@ class FastBaseTransform(torch.nn.Module):
         else:
             img_size = (cfg.max_size, cfg.max_size)
 
+        print("shape img.............", img.shape)
         img = img.permute(0, 3, 1, 2).contiguous()
         img = F.interpolate(img, img_size, mode='bilinear', align_corners=False)
 
@@ -648,10 +649,10 @@ class FastBaseTransform(torch.nn.Module):
             img = (img - self.mean)
         elif self.transform.to_float:
             img = img / 255
-        
+
         if self.transform.channel_order != 'RGB':
             raise NotImplementedError
-        
+
         img = img[:, (2, 1, 0), :, :].contiguous()
 
         # Return value is in channel order [n, c, h, w] and RGB

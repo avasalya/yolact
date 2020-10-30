@@ -1062,31 +1062,6 @@ def print_maps(all_maps):
 if __name__ == '__main__':
     parse_args()
 
-#     """ realsense """
-#     config = rs.config()
-#     config.enable_stream(rs.stream.color, 640 , 480 , rs.format.bgr8, 30)
-#     config.enable_stream(rs.stream.depth, 640 , 480 , rs.format.z16, 30)
-
-#     # Start streaming
-#     pipeline = rs.pipeline()
-#     profile = pipeline.start(config)
-
-# try:
-#     while True:
-#         frames = pipeline.wait_for_frames()
-#         color_frame = frames.get_color_frame()
-#         depth_frame = rs.align(rs.stream.color).process(frames).get_depth_frame()
-
-#         """ color image """
-#         rgb = np.asanyarray(color_frame.get_data())
-#         rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
-
-#         """ Depth image """
-#         depth = np.asanyarray(depth_frame.get_data())
-# finally:
-#     pipeline.stop()
-
-
     if args.config is not None:
         set_cfg(args.config)
 
